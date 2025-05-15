@@ -25,11 +25,11 @@ If you have the project as a ZIP file (e.g., `ceyora_frontend_final_refactored.z
 
 If cloning from a Git repository (hypothetical):
 ```bash
-git clone https://github.com/yourusername/ceyora-frontend-refactored.git
+git clone https://github.com/yourusername/ceyora-app-frontend.git
 cd ceyora-frontend-refactored
 ```
 
-Navigate into the project root directory (e.g., `ceyora_frontend_restructured`).
+Navigate into the project root directory (e.g., `ceyora-app-frontend`).
 
 ### 2. Install Dependencies
 
