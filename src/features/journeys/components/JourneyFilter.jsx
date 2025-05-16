@@ -152,24 +152,27 @@ const JourneyFilter = ({
         </div>
 
         {expandedSections.price && (
-          <div className="flex gap-3 items-center px-2">
-            <input
-              type="number"
-              className="w-full border p-2 rounded"
-              placeholder="Min"
-              value={selectedFilters.priceRange[0]}
-              onChange={(e) => handleMinMaxPriceChange(e, "min")}
-            />
-            <span className="text-ocean-mist">to</span>
-            <input
-              type="number"
-              className="w-full border p-2 rounded"
-              placeholder="Max"
-              value={selectedFilters.priceRange[1]}
-              onChange={(e) => handleMinMaxPriceChange(e, "max")}
-            />
-          </div>
-        )}
+  <div className="flex gap-3 items-center px-2">
+    <input
+      type="number"
+      className="w-full border p-2 rounded"
+      placeholder="Min"
+      value={selectedFilters.priceRange[0]}
+      onChange={(e) => handleMinMaxPriceChange(e, "min")}
+      onFocus={() => handleMinMaxPriceChange({ target: { value: "" } }, "min")}
+    />
+    <span className="text-ocean-mist">to</span>
+    <input
+      type="number"
+      className="w-full border p-2 rounded"
+      placeholder="Max"
+      value={selectedFilters.priceRange[1]}
+      onChange={(e) => handleMinMaxPriceChange(e, "max")}
+      onFocus={() => handleMinMaxPriceChange({ target: { value: "" } }, "max")}
+    />
+  </div>
+)}
+
       </div>
 
       {/* Duration Section */}
