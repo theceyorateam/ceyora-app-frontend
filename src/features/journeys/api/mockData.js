@@ -16,7 +16,7 @@ export const journeys = [
     rating: 4.8,
     reviews: 35,
     tags: ["Cultural", "Culinary", "Family-friendly"],
-    imageUrl: spiceImage, 
+    imageUrl: spiceImage,
     images: [
       spiceImage,
       "https://images.unsplash.com/photo-1596797038530-2c107aa5e59c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
@@ -76,7 +76,7 @@ export const journeys = [
     rating: 4.9,
     reviews: 42,
     tags: ["Wellness", "Spiritual", "Educational"],
-    imageUrl: meditationImage, 
+    imageUrl: meditationImage,
     images: [
       meditationImage,
       "https://images.unsplash.com/photo-1545389336-cf090694435e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2064&q=80",
@@ -136,7 +136,7 @@ export const journeys = [
     rating: 4.7,
     reviews: 28,
     tags: ["Adventure", "Nature", "Cultural"],
-    imageUrl: spiceImage, 
+    imageUrl: spiceImage,
     images: [
       spiceImage,
       "https://images.unsplash.com/photo-1540202404-a2f29016b523?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2033&q=80",
@@ -190,9 +190,10 @@ export const reviews = [
     journeyId: 1,
     userId: "u101",
     userName: "Sarah L.",
-    userImage: "/assets/images/user1.jpg",
+    userImage: null,
     rating: 5,
     comment: "Absolutely fantastic experience! Kumari was a wonderful host and the food was delicious. Highly recommend!",
+    reply: "Thank you, Sarah! ",
     date: "2024-07-15",
   },
   {
@@ -203,6 +204,8 @@ export const reviews = [
     userImage: null,
     rating: 4,
     comment: "Great cooking class, learned a lot. The market tour was very insightful.",
+    reply: "Thanks for your feedback, John! We're glad you found the market tour insightful. We hope to see you again soon!",
+
     date: "2024-07-10",
   },
   {
@@ -213,6 +216,7 @@ export const reviews = [
     userImage: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80",
     rating: 5,
     comment: "The meditation session at Ritigala was truly transformative. Venerable Nanda was an excellent guide.",
+    reply: "Thank you, Aisha! We're so glad to hear that the session was transformative for you. Venerable Nanda is indeed a wonderful guide.",
     date: "2024-06-20",
   },
   {
@@ -224,12 +228,14 @@ export const reviews = [
     rating: 4,
     comment: "Waking up early was worth it for the stilt fishing. A unique cultural experience.",
     date: "2024-07-01",
+    reply: "Thanks for your review, Mike! We're glad you found the stilt fishing experience unique. It truly is a special part of our culture.",
   },
   {
     id: "r5",
     journeyId: 1,
     userId: "u105",
     userName: "Chloe G.",
+    reply: "Thank you for your kind words, Chloe! We're delighted to hear that you loved the experience. Your feedback inspires us to keep creating memorable journeys.",
     userImage: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80",
     rating: 5,
     comment: "Loved every minute of it! The host family was so welcoming and the food was the best I had in Sri Lanka.",

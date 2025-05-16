@@ -1,57 +1,81 @@
 // src/features/journeys/pages/JourneyDetailsPage.jsx
 import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-// Removed unused motion, AnimatePresence
+import { motion, AnimatePresence } from "framer-motion";
 import ImageCarousel from "../components/ImageCarousel";
 import PackageCard from "../components/PackageCard";
 import HostPreview from "../components/HostPreview";
-import useJourneyDetails from "../hooks/useJourneyDetails"; // Import the new hook
+import useJourneyDetails from "../hooks/useJourneyDetails";
+import useReviews from "../hooks/useReviews";
+import ReviewCard from "../components/ReviewCard";
 
 const JourneyDetailsPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { journey, loading, error } = useJourneyDetails(id); // Use the hook
+  const { journey, loading, error } = useJourneyDetails(id);
   const [selectedPackage, setSelectedPackage] = useState(null);
   const packagesRef = useRef(null);
+  const reviewsRef = useRef(null);
 
-  // Effect to set selectedPackage when journey data is loaded or changes
+  const { reviews: fetchedReviews, loading: reviewsLoading, error: reviewsError } = useReviews(journey?.id);
+  const [allReviews, setAllReviews] = useState([]);
+  const [visibleCount, setVisibleCount] = useState(3);
+  const [newReview, setNewReview] = useState({
+    userName: "",
+    rating: 5,
+    comment: "",
+  });
+
   useEffect(() => {
-    if (journey && journey.packages && journey.packages.length > 0) {
+    if (fetchedReviews.length) {
+      const sorted = [...fetchedReviews].sort((a, b) => new Date(b.date) - new Date(a.date));
+      setAllReviews(sorted);
+    }
+  }, [fetchedReviews]);
+
+  useEffect(() => {
+    if (journey?.packages?.length) {
       setSelectedPackage(journey.packages[0]);
     } else if (journey) {
-      // Handle cases where there are no packages, set a default based on journey itself
       setSelectedPackage({
         id: "default",
         name: "Standard Experience",
         priceLKR: journey.priceLKR,
         priceUSD: journey.priceUSD,
-        // Add other necessary fields if your PackageCard expects them
       });
     }
   }, [journey]);
 
-  const handleBackClick = () => {
-    navigate(-1);
-  };
-
-  const scrollToPackages = () => {
-    packagesRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
+  const handleBackClick = () => navigate(-1);
+  const scrollToPackages = () => packagesRef.current?.scrollIntoView({ behavior: "smooth" });
+  const scrollToReviews = () => reviewsRef.current?.scrollIntoView({ behavior: "smooth" });
 
   const handleBookClick = () => {
-    if (!journey || !selectedPackage) {
-      // Handle case where journey or selectedPackage is not yet loaded or available
-      // Optionally, show a message or disable the button
-      console.warn("Journey or selected package not available for booking.");
-      return;
-    }
-    navigate("/book", {
-      state: {
-        journey,
-        selectedPackage,
-      },
-    });
+    if (!journey || !selectedPackage) return;
+    navigate("/book", { state: { journey, selectedPackage } });
   };
+
+const handleReviewSubmit = (e) => {
+  e.preventDefault();
+
+  const reviewWithId = {
+    ...newReview,
+    id: Date.now().toString(),
+    journeyId: parseInt(id), // from useParams
+    userId: "u" + Date.now(), // or however you're generating user IDs
+    date: new Date().toISOString(),
+    userImage: null,
+    reply: null,
+  };
+
+  console.log(JSON.stringify(reviewWithId, null, 2));
+
+  setAllReviews([reviewWithId, ...allReviews]);
+  setNewReview({ userName: "", rating: 5, comment: "" });
+};
+
+
+  const visibleReviews = allReviews.slice(0, visibleCount);
 
   if (loading) {
     return (
@@ -61,35 +85,20 @@ const JourneyDetailsPage = () => {
             <div className="rounded-xl bg-gray-200 h-64 md:h-80 w-full mb-6"></div>
             <div className="h-8 bg-gray-200 rounded w-3/4 mb-4"></div>
             <div className="h-4 bg-gray-200 rounded w-1/2 mb-6"></div>
-            <div className="flex gap-2 mb-4">
-              <div className="h-6 w-20 bg-gray-200 rounded-full"></div>
-              <div className="h-6 w-20 bg-gray-200 rounded-full"></div>
-            </div>
-            <div className="space-y-3 mb-6">
-              <div className="h-4 bg-gray-200 rounded w-full"></div>
-              <div className="h-4 bg-gray-200 rounded w-full"></div>
-              <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-            </div>
-            <div className="h-6 bg-gray-200 rounded w-1/3 mb-4"></div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="bg-gray-200 rounded-lg h-64"></div>
-              ))}
-            </div>
           </div>
         </div>
       </div>
     );
   }
 
-  if (error) {
+  if (error || reviewsError) {
     return (
       <div className="bg-ceylon-cream min-h-screen py-8">
         <div className="container mx-auto px-4 max-w-4xl">
           <div className="text-center py-12 bg-white rounded-lg shadow-sm">
             <h2 className="text-xl font-semibold text-teakwood-brown mb-2">Something went wrong</h2>
-            <p className="text-ocean-mist mb-6">{error}</p>
-            <button 
+            <p className="text-ocean-mist mb-6">{error || reviewsError}</p>
+            <button
               onClick={handleBackClick}
               className="px-4 py-2 bg-ceyora-clay text-white rounded-lg hover:bg-palm-green transition-colors"
             >
@@ -107,11 +116,10 @@ const JourneyDetailsPage = () => {
         <div className="container mx-auto px-4 max-w-4xl">
           <div className="text-center py-12 bg-white rounded-lg shadow-sm">
             <h2 className="text-xl font-semibold text-teakwood-brown mb-2">Journey Not Found</h2>
-            <p className="text-ocean-mist mb-6">The journey you\\'re looking for doesn\\'t exist or has been removed.</p>
-            <button 
+            <p className="text-ocean-mist mb-6">The journey you're looking for doesn't exist or has been removed.</p>
+            <button
               onClick={handleBackClick}
               className="px-4 py-2 bg-ceyora-clay text-white rounded-lg hover:bg-palm-green transition-colors"
-              aria-label="Go back to journeys page"
             >
               Go Back
             </button>
@@ -125,88 +133,52 @@ const JourneyDetailsPage = () => {
     <div className="bg-ceylon-cream min-h-screen pb-24">
       <div className="sticky top-0 z-30 bg-ceylon-cream bg-opacity-90 backdrop-blur-sm py-3 px-4 border-b border-gray-200">
         <div className="container mx-auto max-w-4xl flex justify-between items-center">
-          <button 
-            onClick={handleBackClick}
-            className="flex items-center text-teakwood-brown hover:text-ceyora-clay transition-colors"
-            aria-label="Go back to journeys page"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
-            </svg>
-            Back
-          </button>
-          <button 
-            onClick={scrollToPackages}
-            className="text-sm font-medium text-ceyora-clay hover:text-palm-green transition-colors flex items-center"
-            aria-label="View available packages"
-          >
-            View Packages
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-            </svg>
-          </button>
+          <button onClick={handleBackClick} className="text-teakwood-brown hover:text-ceyora-clay">← Back</button>
+          <button onClick={scrollToPackages} className="text-sm font-medium text-ceyora-clay hover:text-palm-green">View Packages →</button>
         </div>
       </div>
 
       <div className="container mx-auto px-4 pt-4 pb-8 max-w-4xl">
-        <div className="mb-6" aria-label="Journey photos">
+        <div className="mb-6">
           <ImageCarousel images={journey.images || [journey.imageUrl]} title={journey.title} />
         </div>
 
         <div className="bg-white rounded-xl shadow-sm overflow-hidden mb-8">
           <div className="p-6 border-b border-gray-100">
-            <div className="flex flex-wrap items-start justify-between gap-2 mb-2">
+            <div className="flex justify-between flex-wrap gap-2 mb-2">
               <h1 className="text-2xl md:text-3xl font-bold text-teakwood-brown">{journey.title}</h1>
               <div className="flex items-center bg-soft-cream px-3 py-1 rounded-lg">
-                <span className="text-sun-gold mr-1" aria-hidden="true">★</span>
+                <span className="text-sun-gold mr-1">★</span>
                 <span className="font-medium text-teakwood-brown">{journey.rating}</span>
-                <span className="text-ocean-mist text-sm ml-1">({journey.reviews} reviews)</span>
-              </div>
-            </div>
-            {journey.subtitle && (
-              <h2 className="text-lg text-ocean-mist mb-3">{journey.subtitle}</h2>
-            )}
-            <div className="flex flex-wrap items-center gap-3 text-sm text-ocean-mist mb-4">
-              <div className="flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1 text-palm-green" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                <span>{journey.location}</span>
-              </div>
-              <div className="flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1 text-palm-green" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span>{journey.duration}</span>
-              </div>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {journey.tags.map((tag) => (
                 <span
-                  key={tag}
-                  className="px-3 py-1 bg-palm-green bg-opacity-10 text-palm-green text-xs font-medium rounded-full"
+                  className="text-ocean-mist text-sm ml-1 cursor-pointer hover:underline"
+                  onClick={scrollToReviews}
                 >
-                  {tag}
+                  ({fetchedReviews.length} reviews)
                 </span>
+              </div>
+            </div>
+            {journey.subtitle && <h2 className="text-lg text-ocean-mist mb-3">{journey.subtitle}</h2>}
+            <p className="text-sm text-ocean-mist mb-4">{journey.location} • {journey.duration}</p>
+            <div className="flex flex-wrap gap-2">
+              {journey.tags.map(tag => (
+                <span key={tag} className="bg-palm-green bg-opacity-10 text-palm-green text-xs font-medium px-3 py-1 rounded-full">{tag}</span>
               ))}
             </div>
           </div>
+
           {journey.host && (
             <div className="p-6 border-b border-gray-100">
               <HostPreview host={journey.host} />
             </div>
           )}
+
           <div className="p-6">
             <h3 className="text-xl font-semibold text-teakwood-brown mb-3">About This Experience</h3>
             <div className="text-ocean-mist space-y-4">
-              {journey.description ? (
-                journey.description.split("\n\n").map((paragraph, index) => (
-                  <p key={index} className="leading-relaxed">{paragraph}</p>
-                ))
-              ) : (
-                <p className="leading-relaxed">{journey.summary}</p>
-              )}
+              {(journey.description || journey.summary).split("\n\n").map((p, i) => (
+                <p key={i} className="leading-relaxed">{p}</p>
+              ))}
             </div>
           </div>
         </div>
@@ -214,44 +186,116 @@ const JourneyDetailsPage = () => {
         <div className="mb-6 scroll-mt-20" ref={packagesRef}>
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-xl font-semibold text-teakwood-brown">Available Packages</h3>
-            <span className="text-sm text-ocean-mist">{journey.packages?.length || (journey ? 1 : 0)} options</span>
+            <span className="text-sm text-ocean-mist">{journey.packages?.length || 1} options</span>
           </div>
-          <p className="text-ocean-mist mb-6">Choose the package that best suits your preferences and group size.</p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {journey.packages && journey.packages.length > 0 ? (
-              journey.packages.map((pkg) => (
-                <PackageCard 
-                  key={pkg.id} 
-                  package={pkg} 
-                  isSelected={selectedPackage?.id === pkg.id}
-                  onSelect={() => setSelectedPackage(pkg)}
-                />
-              ))
-            ) : journey ? (
-              <PackageCard 
-                package={{
-                  id: "default",
-                  name: "Standard Experience",
-                  priceLKR: journey.priceLKR,
-                  priceUSD: journey.priceUSD,
-                  description: journey.summary,
-                  duration: journey.duration,
-                  inclusions: ["Guided experience", "Local host"],
-                  maxGuests: 6
-                }}
-                isSelected={selectedPackage?.id === "default"}
-                onSelect={() => setSelectedPackage({
-                  id: "default",
-                  name: "Standard Experience",
-                  priceLKR: journey.priceLKR,
-                  priceUSD: journey.priceUSD
-                })}
+            {(journey.packages?.length > 0 ? journey.packages : [{
+              id: "default",
+              name: "Standard Experience",
+              priceLKR: journey.priceLKR,
+              priceUSD: journey.priceUSD,
+              description: journey.summary,
+              duration: journey.duration,
+              inclusions: ["Guided experience", "Local host"],
+              maxGuests: 6,
+            }]).map(pkg => (
+              <PackageCard
+                key={pkg.id}
+                package={pkg}
+                isSelected={selectedPackage?.id === pkg.id}
+                onSelect={() => setSelectedPackage(pkg)}
               />
-            ) : null}
+            ))}
+          </div>
+        </div>
+
+        {/* Reviews */}
+        <div ref={reviewsRef} className="bg-white rounded-xl shadow-sm overflow-hidden mb-8">
+          <div className="p-6 border-b border-gray-100">
+            <h3 className="text-xl font-semibold text-teakwood-brown mb-4">User Reviews</h3>
+            {reviewsLoading && <p className="text-ocean-mist">Loading reviews...</p>}
+            {!reviewsLoading && allReviews.length === 0 && <p className="text-ocean-mist">No reviews yet.</p>}
+            <AnimatePresence>
+              {visibleReviews.map((review) => (
+                <motion.div
+                  key={review.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <ReviewCard
+                    userName={review.userName}
+                    userImage={review.userImage}
+                    rating={review.rating}
+                    comment={review.comment}
+                    date={review.date}
+                    reply={review.reply}
+                    onReply={(replyText) => {
+                      const updated = allReviews.map((r) =>
+                        r.id === review.id ? { ...r, reply: replyText } : r
+                      );
+                    console.log(JSON.stringify(updated, null, 2));
+                      
+                      setAllReviews(updated);
+                    }}
+                  />
+                </motion.div>
+              ))}
+            </AnimatePresence>
+            {visibleCount < allReviews.length && (
+              <div className="mt-4 text-center">
+                <button
+                  onClick={() => setVisibleCount((prev) => prev + 2)}
+                  className="text-ceyora-clay hover:underline text-sm font-medium"
+                >
+                  Load More Reviews
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Submit Review */}
+          <div className="p-6 border-b border-gray-100">
+            <h3 className="text-xl font-semibold text-teakwood-brown mb-4">Leave a Review</h3>
+            <form onSubmit={handleReviewSubmit} className="space-y-3">
+              <input
+                type="text"
+                required
+                value={newReview.userName}
+                placeholder="Your Name"
+                onChange={(e) => setNewReview({ ...newReview, userName: e.target.value })}
+                className="w-full p-2 border rounded"
+              />
+              <textarea
+                required
+                placeholder="Write your review..."
+                value={newReview.comment}
+                onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
+                className="w-full p-2 border rounded"
+              />
+              <div className="flex items-center gap-2">
+                <label className="text-sm text-teakwood-brown font-medium">Your Rating:</label>
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <button
+                    key={star}
+                    type="button"
+                    onClick={() => setNewReview({ ...newReview, rating: star })}
+                    className={`text-2xl ${newReview.rating >= star ? "text-sun-gold" : "text-gray-300"} hover:text-sun-gold transition-colors`}
+                  >
+                    ★
+                  </button>
+                ))}
+              </div>
+              <button type="submit" className="bg-ceyora-clay text-white px-4 py-2 rounded hover:bg-palm-green transition">
+                Submit Review
+              </button>
+            </form>
           </div>
         </div>
       </div>
 
+      {/* Footer */}
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-lg z-20">
         <div className="container mx-auto max-w-4xl flex items-center justify-between">
           {selectedPackage ? (
@@ -265,20 +309,17 @@ const JourneyDetailsPage = () => {
                   </span>
                 </p>
               </div>
-              <button 
+              <button
                 onClick={handleBookClick}
                 className="bg-ceyora-clay hover:bg-palm-green text-white font-medium py-3 px-6 rounded-lg transition-colors"
-                aria-label={`Book ${selectedPackage?.name} package`}
-                disabled={!journey || !selectedPackage} // Disable if data not ready
               >
                 Book This Package
               </button>
             </>
           ) : (
-            <button 
+            <button
               onClick={scrollToPackages}
               className="w-full bg-ceyora-clay hover:bg-palm-green text-white font-medium py-3 rounded-lg transition-colors"
-              aria-label="Select a package"
             >
               Select a Package
             </button>
@@ -290,4 +331,3 @@ const JourneyDetailsPage = () => {
 };
 
 export default JourneyDetailsPage;
-
