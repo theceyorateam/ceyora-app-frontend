@@ -85,15 +85,7 @@ const JourneyFilter = ({
 
   return (
     <div className="bg-white rounded-lg">
-      <div className="flex justify-between items-center mb-6">
-        <h3 className="font-medium text-teakwood-brown text-lg">Refine Results</h3>
-        <button 
-          onClick={onClearFilters}
-          className="text-sm text-ceyora-clay hover:text-palm-green"
-        >
-          Clear all
-        </button>
-      </div>
+
 
       {/* Categories Section */}
       <div className="mb-5 border-b border-gray-100 pb-4">
