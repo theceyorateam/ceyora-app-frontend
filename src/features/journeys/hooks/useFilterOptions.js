@@ -1,9 +1,14 @@
-// src/features/journeys/hooks/useFilterOptions.js
 import { useState, useEffect } from "react";
 import { journeysApi } from "../api/journeysApi";
 
 const useFilterOptions = () => {
-  const [filterOptions, setFilterOptions] = useState(null);
+  const [filterOptions, setFilterOptions] = useState({
+    categories: [],
+    locations: [],
+    durations: [],
+    ratings: [],
+    priceRanges: []
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -12,12 +17,27 @@ const useFilterOptions = () => {
       try {
         setLoading(true);
         setError(null);
-        const data = await journeysApi.getFilterOptions();
-        setFilterOptions(data);
+        
+        // Fetch all filter options in parallel from separate endpoints
+        const [categories, locations, durations, ratings, priceRanges] = await Promise.all([
+          journeysApi.getCategories(),
+          journeysApi.getLocations(),
+          journeysApi.getDurations(),
+          journeysApi.getRatings(),
+          journeysApi.getPriceRanges()
+        ]);
+        
+        // Combine all filter options
+        setFilterOptions({
+          categories,
+          locations,
+          durations,
+          ratings,
+          priceRanges
+        });
       } catch (err) {
         console.error("Error fetching filter options:", err);
         setError("Could not load filter options. Please try again later.");
-        setFilterOptions(null);
       } finally {
         setLoading(false);
       }
@@ -30,4 +50,3 @@ const useFilterOptions = () => {
 };
 
 export default useFilterOptions;
-

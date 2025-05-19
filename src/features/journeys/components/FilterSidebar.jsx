@@ -1,16 +1,17 @@
-// src/features/journeys/components/FilterSidebar.jsx
 import React from "react";
 import { motion } from "framer-motion";
 import JourneyFilter from "./JourneyFilter";
 
 const FilterSidebar = ({ 
-  tags, 
   selectedTag, 
   setSelectedTag, 
   selectedFilters, 
   setSelectedFilters,
   onClearFilters,
-  onClose
+  onClose,
+  filterOptions,
+  loading,
+  error
 }) => {
   const sidebarVariants = {
     hidden: { 
@@ -46,7 +47,7 @@ const FilterSidebar = ({
       <div className="flex justify-between items-center mb-6">
         <h3 className="font-medium text-teakwood-brown text-lg">Filters</h3>
         <div className="flex items-center gap-3">
-          <button 
+          {/* <button 
             onClick={onClearFilters}
             className="text-sm text-ceyora-clay hover:text-palm-green"
           >
@@ -59,17 +60,18 @@ const FilterSidebar = ({
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
             </svg>
-          </button>
+          </button> */}
         </div>
       </div>
       
       <JourneyFilter 
-        tags={tags} 
         selectedTag={selectedTag} 
         setSelectedTag={setSelectedTag}
         selectedFilters={selectedFilters}
         setSelectedFilters={setSelectedFilters}
-        onClearFilters={onClearFilters}
+        filterOptions={filterOptions}
+        loading={loading}
+        error={error}
       />
     </motion.div>
   );

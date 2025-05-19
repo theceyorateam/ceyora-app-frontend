@@ -1,4 +1,4 @@
-import { journeys, reviews, baseFilterOptions, mockCategories } from './mockData'; // Added mockCategories
+import { journeys, reviews, mockCategories, mockLocations, mockDurations, mockRatings, mockPriceRanges } from './mockData';
 
 const SIMULATED_DELAY = 500; // ms
 
@@ -126,21 +126,62 @@ export const journeysApi = {
   },
 
   /**
-   * Fetches filter options, including categories from a dedicated mock source.
-   * In a real backend, categories would likely come from a separate /api/categories endpoint.
-   * @returns {Promise<object>} A promise that resolves to an object containing filter options.
+   * Fetches categories from a dedicated backend endpoint
+   * @returns {Promise<Array>} A promise that resolves to an array of categories
    */
-  getFilterOptions: () => {
+  getCategories: () => {
     return new Promise((resolve) => {
       setTimeout(() => {
-        // Use the dedicated mockCategories list
-        const combinedFilterOptions = {
-          ...baseFilterOptions,
-          categories: mockCategories, // Use the separate mockCategories list
-        };
-        resolve(combinedFilterOptions);
+        resolve(mockCategories);
+      }, SIMULATED_DELAY);
+    });
+  },
+
+  /**
+   * Fetches locations from a dedicated backend endpoint
+   * @returns {Promise<Array>} A promise that resolves to an array of locations
+   */
+  getLocations: () => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(mockLocations);
+      }, SIMULATED_DELAY);
+    });
+  },
+
+  /**
+   * Fetches durations from a dedicated backend endpoint
+   * @returns {Promise<Array>} A promise that resolves to an array of durations
+   */
+  getDurations: () => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(mockDurations);
+      }, SIMULATED_DELAY);
+    });
+  },
+
+  /**
+   * Fetches ratings from a dedicated backend endpoint
+   * @returns {Promise<Array>} A promise that resolves to an array of ratings
+   */
+  getRatings: () => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(mockRatings);
+      }, SIMULATED_DELAY);
+    });
+  },
+
+  /**
+   * Fetches price ranges from a dedicated backend endpoint
+   * @returns {Promise<Array>} A promise that resolves to an array of price ranges
+   */
+  getPriceRanges: () => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(mockPriceRanges);
       }, SIMULATED_DELAY);
     });
   }
 };
-

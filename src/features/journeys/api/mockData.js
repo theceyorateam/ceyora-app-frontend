@@ -243,7 +243,7 @@ export const reviews = [
   }
 ];
 
-// Dedicated mock data for categories, simulating a separate backend resource
+// Dedicated mock data for categories - simulating a separate backend API endpoint
 export const mockCategories = [
   { id: "cultural", name: "Cultural" },
   { id: "culinary", name: "Culinary" },
@@ -253,25 +253,45 @@ export const mockCategories = [
   { id: "educational", name: "Educational" },
   { id: "adventure", name: "Adventure" },
   { id: "nature", name: "Nature" },
-  { id: "historical", name: "Historical Tours" }, // Example of a category not in current journey tags
-  { id: "wildlife", name: "Wildlife Safari" } // Another example
+  { id: "historical", name: "Historical Tours" },
+  { id: "wildlife", name: "Wildlife Safari" }
 ];
 
-// Base filter options (categories will now come from mockCategories)
-export const baseFilterOptions = {
-  priceRanges: [
-    { id: "range1", name: "Under $20", min: 0, max: 20 },
-    { id: "range2", name: "$20 - $40", min: 20, max: 40 },
-    { id: "range3", name: "Over $40", min: 40, max: Infinity },
-  ],
-  durations: [
-    { id: "short", name: "Short (1-3 hours)" },
-    { id: "half-day", name: "Half-day (3-5 hours)" },
-    { id: "full-day", name: "Full-day (5+ hours)" },
-  ],
-  ratings: [
-    { id: "5star", name: "5 Stars", value: 5 },
-    { id: "4star", name: "4 Stars & Up", value: 4 },
-    { id: "3star", name: "3 Stars & Up", value: 3 },
-  ],
-};
+// Dedicated mock data for locations - simulating a separate backend API endpoint
+export const mockLocations = [
+  { id: "colombo", name: "Colombo" },
+  { id: "kandy", name: "Kandy" },
+  { id: "galle", name: "Galle" },
+  { id: "ella", name: "Ella" },
+  { id: "sigiriya", name: "Sigiriya" },
+  { id: "nuwara-eliya", name: "Nuwara Eliya" },
+  { id: "trincomalee", name: "Trincomalee" },
+  { id: "jaffna", name: "Jaffna" },
+  { id: "matara", name: "Matara" },
+  { id: "ritigala", name: "Ritigala" },
+  { id: "anuradhapura", name: "Anuradhapura" }
+];
+
+// Dedicated mock data for durations - simulating a separate backend API endpoint
+export const mockDurations = [
+  { id: "half-day", name: "Half day" },
+  { id: "full-day", name: "Full day" },
+  { id: "2-3-days", name: "2-3 days" },
+  { id: "4-7-days", name: "4-7 days" },
+  { id: "week-plus", name: "Week+" }
+];
+
+// Dedicated mock data for ratings - simulating a separate backend API endpoint
+export const mockRatings = [
+  { id: "any", name: "Any rating", value: 0 },
+  { id: "3plus", name: "3+ stars", value: 3 },
+  { id: "4plus", name: "4+ stars", value: 4 },
+  { id: "4.5plus", name: "4.5+ stars", value: 4.5 }
+];
+
+// Dedicated mock data for price ranges - simulating a separate backend API endpoint
+export const mockPriceRanges = [
+  { id: "budget", name: "Budget", min: 0, max: 20000 },
+  { id: "mid-range", name: "Mid-range", min: 20000, max: 35000 },
+  { id: "premium", name: "Premium", min: 35000, max: 50000 }
+];
