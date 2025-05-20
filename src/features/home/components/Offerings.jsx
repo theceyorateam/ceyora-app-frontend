@@ -15,23 +15,20 @@ const OfferingsCard = ({ icon, title, description, imageUrl, index }) => {
       initial={{ opacity: 0, y: 50 }}
       animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="flex flex-col bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:scale-[1.02] h-full"
+      className="flex flex-col overflow-hidden rounded-xl shadow-lg bg-white hover:shadow-xl transition-all duration-300"
     >
       <div className="relative h-48 overflow-hidden">
-        <img 
-          src={imageUrl} 
-          alt={`${title} experience`} 
-          className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
-          <div className="p-4 text-white">
-            <div className="text-3xl mb-2 text-sun-gold">{icon}</div>
-            <h3 className="text-xl font-bold">{title}</h3>
-          </div>
-        </div>
+        <img src={imageUrl} alt={title} className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
+        <div className="absolute inset-0 bg-gradient-to-t from-teakwood-brown/70 to-transparent"></div>
       </div>
-      <div className="p-5">
-        <p className="text-teakwood-brown">{description}</p>
+      <div className="p-6 flex-1 flex flex-col">
+        <div className="flex items-center mb-4">
+          <div className="p-3 rounded-full bg-ceyora-clay mr-4">
+            {React.cloneElement(icon, { className: "w-6 h-6 text-white" })}
+          </div>
+          <h3 className="text-xl font-bold text-teakwood-brown">{title}</h3>
+        </div>
+        <p className="text-ocean-mist mb-4 flex-1">{description}</p>
       </div>
     </motion.div>
   );
@@ -83,65 +80,46 @@ const Offerings = () => {
   ];
 
   return (
-    <motion.section 
-      ref={sectionRef}
-      initial={{ opacity: 0 }}
-      animate={sectionInView ? { opacity: 1 } : { opacity: 0 }}
-      transition={{ duration: 0.8 }}
-      className="py-16 px-4 bg-ceylon-cream"
-      aria-labelledby="offerings-heading"
-    >
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <motion.h2 
-            id="offerings-heading"
-            initial={{ opacity: 0, y: -20 }}
-            animate={sectionInView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-3xl md:text-4xl font-bold mb-4 text-teakwood-brown"
-          >
-            What We Offer
-          </motion.h2>
-          <motion.p 
-            initial={{ opacity: 0, y: -20 }}
-            animate={sectionInView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="text-xl max-w-3xl mx-auto text-ocean-mist"
-          >
+    <section className="py-20 bg-ceylon-cream" ref={sectionRef}>
+      <div className="container mx-auto px-4">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          animate={sectionInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-4xl font-bold text-teakwood-brown mb-4">What We Offer</h2>
+          <p className="text-ocean-mist text-xl max-w-3xl mx-auto">
             Ceyora brings you closer to Sri Lanka's heartbeat - its people, places, and traditions - through curated, ethical, and unforgettable experiences.
-          </motion.p>
-        </div>
+          </p>
+        </motion.div>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {offerings.map((offering, index) => (
-            <OfferingsCard
+            <OfferingsCard 
               key={index}
-              index={index}
               icon={offering.icon}
               title={offering.title}
               description={offering.description}
               imageUrl={offering.imageUrl}
+              index={index}
             />
           ))}
         </div>
         
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          animate={sectionInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-          transition={{ duration: 0.5, delay: 0.8 }}
-          className="mt-16 text-center"
-        >
-          <a 
-            href="#explore" 
-            className="inline-block bg-ceyora-clay hover:bg-ceyora-clay/90 text-white font-medium py-3 px-8 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg"
-            aria-label="Explore our experiences"
+        <div className="mt-16 text-center">
+          <motion.a
+            initial={{ opacity: 0, y: 20 }}
+            animate={sectionInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+            href="/journeys"
+            className="inline-block px-8 py-4 bg-ceyora-clay hover:bg-ceyora-clay/90 text-white font-semibold rounded-lg transition-all shadow-lg hover:shadow-xl"
           >
-            Explore Our Experiences
-          </a>
-          <p className="mt-4 text-ocean-mist">500+ experiences across Sri Lanka</p>
-        </motion.div>
+            Explore Our Journeys
+          </motion.a>
+        </div>
       </div>
-    </motion.section>
+    </section>
   );
 };
 

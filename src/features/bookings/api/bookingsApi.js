@@ -1,6 +1,7 @@
+// src/features/bookings/api/bookingsApi.js
 import { bookingFormData, bookingConfirmationDetails } from './mockData';
 
-const SIMULATED_DELAY = 500; // ms
+const SIMULATED_DELAY = 800; // ms
 
 export const bookingsApi = {
   getBookingFormOptions: () => {
@@ -12,34 +13,59 @@ export const bookingsApi = {
   },
 
   submitBooking: (bookingDetails) => {
-    // In a real API, this would send data to the backend and return a response.
-    // For mock purposes, we can simulate success and return a confirmation.
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       setTimeout(() => {
-        console.log('Simulated booking submission:', bookingDetails);
-        // You could add some basic validation simulation here if needed
+        // Simulate validation
+        if (!bookingDetails.personalDetails || !bookingDetails.personalDetails.email) {
+          reject(new Error('Invalid booking details'));
+          return;
+        }
+
+        const bookingReference = `CEY-${Math.floor(10000 + Math.random() * 90000)}`;
         resolve({
           success: true,
+          bookingReference,
           confirmation: {
             ...bookingConfirmationDetails.sampleConfirmation,
-            bookingId: `BK${Date.now().toString().slice(-8)}`, // Generate a unique-ish ID
-            journeyTitle: bookingDetails.journey ? bookingDetails.journey.title : 'Selected Journey',
-            customerName: bookingDetails.personalDetails ? `${bookingDetails.personalDetails.firstName} ${bookingDetails.personalDetails.lastName}` : 'Valued Customer',
+            bookingReference,
+            journeyTitle: bookingDetails.journey?.title || 'Selected Journey',
+            customerName: bookingDetails.personalDetails
+              ? `${bookingDetails.personalDetails.name}`
+              : 'Valued Customer',
           }
         });
-      }, SIMULATED_DELAY + 500); // Slightly longer delay for submission
+      }, SIMULATED_DELAY);
     });
   },
 
-  // Example: fetchBookingDetails (if there was a page to view a past booking)
-  // fetchBookingDetails: (bookingId) => {
-  //   return new Promise((resolve, reject) => {
-  //     setTimeout(() => {
-  //       // Logic to find a mock booking by ID if we stored them
-  //       // For now, let's assume we don't have a list of past mock bookings
-  //       reject(new Error('Fetching specific booking details not implemented in mock.'));
-  //     }, SIMULATED_DELAY);
-  //   });
-  // }
+  getAvailableDates: (journeyId) => {
+    return new Promise((resolve) => {
+      // Simulate fetching available dates for a journey
+      setTimeout(() => {
+        // Mock data: available dates for next 30 days
+        const availableDates = [];
+        const today = new Date();
+        
+        for (let i = 1; i <= 30; i++) {
+          const date = new Date(today);
+          date.setDate(today.getDate() + i);
+          
+          // Randomly exclude some dates to simulate unavailability
+          if (Math.random() > 0.3) {
+            availableDates.push(date.toISOString().split('T')[0]);
+          }
+        }
+        
+        resolve(availableDates);
+      }, SIMULATED_DELAY);
+    });
+  },
+  
+  getAvailableTimes: (journeyId, date) => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(bookingFormData.availableTimes);
+      }, SIMULATED_DELAY);
+    });
+  }
 };
-

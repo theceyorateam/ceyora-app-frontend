@@ -55,11 +55,11 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold text-white mb-4">Explore</h3>
             <ul className="space-y-3 text-sm">
-              <li><a href="/experiences" className="hover:text-sun-gold transition-colors">Browse Experiences</a></li>
-              <li><a href="/hosts" className="hover:text-sun-gold transition-colors">Meet Local Hosts</a></li>
-              <li><a href="/destinations" className="hover:text-sun-gold transition-colors">Destinations</a></li>
+              <li><a href="/journeys" className="hover:text-sun-gold transition-colors">Browse Experiences</a></li>
+              {/* <li><a href="/hosts" className="hover:text-sun-gold transition-colors">Meet Local Hosts</a></li>
+              <li><a href="/destinations" className="hover:text-sun-gold transition-colors">Destinations</a></li> */}
               <li><a href="/about" className="hover:text-sun-gold transition-colors">About Us</a></li>
-              <li><a href="/contact" className="hover:text-sun-gold transition-colors">Get in Touch</a></li>
+              {/* <li><a href="/contact" className="hover:text-sun-gold transition-colors">Get in Touch</a></li> */}
             </ul>
           </div>
 
@@ -68,10 +68,10 @@ const Footer = () => {
             <h3 className="text-lg font-semibold text-white mb-4">Support</h3>
             <ul className="space-y-3 text-sm">
               <li><a href="/faq" className="hover:text-sun-gold transition-colors">FAQs</a></li>
-              <li><a href="/how-it-works" className="hover:text-sun-gold transition-colors">How It Works</a></li>
+              {/* <li><a href="/how-it-works" className="hover:text-sun-gold transition-colors">How It Works</a></li> */}
               <li><a href="/terms" className="hover:text-sun-gold transition-colors">Terms & Conditions</a></li>
               <li><a href="/privacy-policy" className="hover:text-sun-gold transition-colors">Privacy Policy</a></li>
-              <li><a href="/become-host" className="hover:text-sun-gold transition-colors">Become a Host</a></li>
+              {/* <li><a href="/become-host" className="hover:text-sun-gold transition-colors">Become a Host</a></li> */}
             </ul>
           </div>
 
@@ -171,11 +171,11 @@ const Footer = () => {
             
             {expandedSection === "explore" && (
               <div className="py-3 space-y-3 pl-2">
-                <a href="/experiences" className="block text-sm hover:text-sun-gold">Browse Experiences</a>
-                <a href="/hosts" className="block text-sm hover:text-sun-gold">Meet Local Hosts</a>
-                <a href="/destinations" className="block text-sm hover:text-sun-gold">Destinations</a>
+                <a href="/journeys" className="block text-sm hover:text-sun-gold">Browse Experiences</a>
+                {/* <a href="/hosts" className="block text-sm hover:text-sun-gold">Meet Local Hosts</a> */}
+                {/* <a href="/destinations" className="block text-sm hover:text-sun-gold">Destinations</a> */}
                 <a href="/about" className="block text-sm hover:text-sun-gold">About Us</a>
-                <a href="/contact" className="block text-sm hover:text-sun-gold">Get in Touch</a>
+                {/* <a href="/contact" className="block text-sm hover:text-sun-gold">Get in Touch</a> */}
               </div>
             )}
           </div>
@@ -197,10 +197,10 @@ const Footer = () => {
             {expandedSection === "support" && (
               <div className="py-3 space-y-3 pl-2">
                 <a href="/faqs" className="block text-sm hover:text-sun-gold">FAQs</a>
-                <a href="/how-it-works" className="block text-sm hover:text-sun-gold">How It Works</a>
+                {/* <a href="/how-it-works" className="block text-sm hover:text-sun-gold">How It Works</a> */}
                 <a href="/terms" className="block text-sm hover:text-sun-gold">Terms & Conditions</a>
-                <a href="/privacy" className="block text-sm hover:text-sun-gold">Privacy Policy</a>
-                <a href="/become-host" className="block text-sm hover:text-sun-gold">Become a Host</a>
+                <a href="/privacy-policy" className="block text-sm hover:text-sun-gold">Privacy Policy</a>
+                {/* <a href="/become-host" className="block text-sm hover:text-sun-gold">Become a Host</a> */}
               </div>
             )}
           </div>
